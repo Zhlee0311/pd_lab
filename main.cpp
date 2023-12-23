@@ -70,22 +70,19 @@ bool cmp(Distance a, Distance b) {
 void Classification() {
     for (int i = DataTrain; i < Data; i++) {
         vector<Distance> DIS;//存储测试样本与各个训练样本的距离
-        for (int j = 0; j <= i - 1; j++) {
+        for (int j = 0; j < DataTrain; j++) {
             double dis = 0;
             for (int k = 0; k < 62; k++) {
-                dis += sqrt(pow(emo[i].t[k] - emo[j].t[k], 2));
+                dis += pow(emo[i].t[k] - emo[j].t[k], 2);
             }
+            dis = sqrt(dis);
             Distance demo = {dis, j};
             DIS.push_back(demo);
         }
         sort(DIS.begin(), DIS.end(), cmp);
         int cnt[3] = {0};//记录最近的K个邻居中的情绪种类数目
         for (int k = 0; k < K; k++) {
-            if (DIS[k].index >= DataTrain) {
-                cnt[(int) emo[DIS[k].index].id]++;
-            } else {
-                cnt[(int) emo[DIS[k].index].ID]++;
-            }
+            cnt[(int) emo[DIS[k].index].ID]++;
         }
         int max = cnt[0];
         int kind = 0;    //暂定预测的情绪种类为0;
@@ -107,7 +104,7 @@ void Classification() {
 void Test() {
     for (int i = DataTrain; i < Data; i++) {
         if (emo[i].id == -1) {
-            cout << "暂未完成分类,请先分类！" << endl;
+            cerr << "暂未完成分类,请先分类！" << endl;
             return;
         }
     }
@@ -130,7 +127,7 @@ void ResetK() {
             cout << "设定成功！" << endl;
             exit = 0;
         } else {
-            cout << "输入不合法，请重新输入！" << endl;
+            cerr << "输入不合法，请重新输入！" << endl;
         }
     }
     Classification();
@@ -141,7 +138,7 @@ void ResetK() {
 void search1(double x) {
     for (auto &i: emo) {
         for (double j: i.t) {
-            if (fabs(x - j) < 1e-15) {
+            if (fabs(x - j) < 1e-13) {
                 printf("%.1lf ", i.ID);
                 if (i.ID == 2.0) printf("positive\n");
                 else if (i.ID == 1.0) printf("neutral\n");
@@ -155,8 +152,10 @@ void search1(double x) {
 
 void search2(double x) {
     cout << "以下是这种情绪的所有样本:" << endl << endl;
+    int cnt = 1;
     for (auto &i: emo) {
         if (fabs(x - i.ID) < 1e-15) {
+            printf("样本%d:", cnt++);
             for (double j: i.t) {
                 printf("%lf ", j);
             }
@@ -171,11 +170,11 @@ int main() {
     int Exit = 1;
     cout << "欢迎使用情绪检测分类系统！" << endl;
     while (!Input()) {
-        cout << "读取文件错误，请检查文件名并重新输入！" << endl;
+        cerr << "读取文件错误，请检查文件名并重新输入！" << endl;
     }
     int option;
     while (Exit) {
-        printf("1.情绪分类\n2.显示分类准确度\n3.重新设定K\n4.根据样本某一维度的元素推测其情绪种类\n5.列出某一种情绪种类的所有样本\n6.退出\n");
+        printf("1.情绪分类\n2.显示分类准确度\n3.重新设定K\n4.根据样本某一维度的元素推测其情绪种类\n5.列出某一种情绪的所有样本\n6.退出\n");
         cin >> option;
         switch (option) {
             case 1:
@@ -203,7 +202,7 @@ int main() {
                 Exit = 0;
                 break;
             default:
-                cout<<"输入错误，请重新输入！"<<endl;
+                cerr << "输入错误，请重新输入！" << endl;
                 break;
         }
     }
