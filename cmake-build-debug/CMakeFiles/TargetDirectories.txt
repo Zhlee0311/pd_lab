@@ -1,0 +1,3 @@
+/Users/lizhenghao/CLionProjects/emo/cmake-build-debug/CMakeFiles/emo.dir
+/Users/lizhenghao/CLionProjects/emo/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/lizhenghao/CLionProjects/emo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
